@@ -1,4 +1,6 @@
-data/
+data/*
+!data/drafts.json
+!data/teams-new2.json
 node_modules
 
 .env
