@@ -1,3 +1,4 @@
+dist/
 data/*
 !data/drafts.json
 !data/teams-new2.json
