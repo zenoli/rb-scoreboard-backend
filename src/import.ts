@@ -1,20 +1,13 @@
 import mongoose from "mongoose"
-import Blog from "./model/Blog"
+import Blog from "./models/Blog"
+import * as SportMonks from "./services/sportmonks.service"
 
 export async function importTeams() {
-  console.log("SEASON_ID", process.env.SEASON_ID)
-  const response = await fetch(
-    `${process.env.API_URL}/${process.env.API_VERSION}/football/teams/seasons/${process.env.SEASON_ID}?include=players.player`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: process.env.API_TOKEN || "",
-      },
-    }
+  const seasonId = process.env.SEASON_ID || ""
+  const teams = await SportMonks.get(
+    ["football", "teams", "seasons", seasonId],
+    new URLSearchParams({ include: "players.player" })
   )
-
-  console.log(response)
-  const teams = await response.json()
 
   console.log(teams)
   await mongoose.connect(process.env.MONGO_URL || "", {
