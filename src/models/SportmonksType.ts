@@ -5,9 +5,9 @@ const sportmonksTypeSchema = new Schema({
   _id: Number,
   name: String,
   code: String,
-  developer_name: String,
-  model_type: String,
-  stat_group: String,
+  developerName: String,
+  modelType: String,
+  statGroup: String,
 })
 
 const SportmonksType = model("SportmonksType", sportmonksTypeSchema)

@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express"
 import dotenv from "dotenv"
 import { importTeams, importSportmonkTypes } from "./import"
+import { SmType } from "./types/sportmonks"
 
 dotenv.config()
 
@@ -19,3 +20,4 @@ app.post("/import", (req: Request, res: Response) => {
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`)
 })
+

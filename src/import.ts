@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 import * as SportMonks from "./services/sportmonks.service"
 import { SmType } from "./types/sportmonks"
 import SportmonksType from "./models/SportmonksType"
-;("https://api.sportmonks.com/v3/core/types?api_token=$API_TOKEN&filter=populate&per_page=1000")
+import { mapKeys } from "lodash"
 
 export async function importSportmonkTypes() {
   const sportmonkResponse = await SportMonks.get(
@@ -12,18 +12,24 @@ export async function importSportmonkTypes() {
   await mongoose.connect(process.env.MONGO_URL || "", {
     dbName: "euro-2024",
   })
-  // Create a new blog post object
-  const article = new SportmonksType({
-    title: "Awesome Post!",
-    slug: "awesome-post",
-    published: true,
-    content: "This is the best post ever",
-    tags: ["featured", "announcement"],
-  })
 
   const sportmonkTypes = sportmonkResponse.data as SmType[]
 
-  console.log(sportmonkTypes[0])
+  await SportmonksType.bulkWrite(
+    sportmonkTypes.map((input) => ({
+      updateOne: {
+        filter: { _id: input.id },
+        update: {
+          _id: input.id,
+          name: input.name,
+          code: input.code,
+          modelType: input.model_type,
+          statGroup: input.stat_group,
+        },
+        upsert: true,
+      },
+    }))
+  )
 }
 
 export async function importTeams() {
@@ -37,15 +43,4 @@ export async function importTeams() {
   await mongoose.connect(process.env.MONGO_URL || "", {
     dbName: "euro-2024",
   })
-  // Create a new blog post object
-  // const article = new Blog({
-  //   title: "Awesome Post!",
-  //   slug: "awesome-post",
-  //   published: true,
-  //   content: "This is the best post ever",
-  //   tags: ["featured", "announcement"],
-  // })
-
-  // Insert the article in our MongoDB database
-  // await article.save()
 }
