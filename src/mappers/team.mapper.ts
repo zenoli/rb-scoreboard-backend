@@ -4,7 +4,7 @@ import { camelCase, mapKeys, omit } from "lodash"
 export function mapTeam(smTeam: SmTeam) {
   return {
     _id: smTeam.id,
-    players: smTeam.players.map((player) => player.id),
+    players: smTeam.players.map((player) => player.player_id),
     ...omit(
       mapKeys(smTeam, (v, k) => camelCase(k)),
       ["id", "players"]
