@@ -1,5 +1,5 @@
 export interface SmResponse {
-  data: SmTeam[] | SmType[]
+  data: SmTeam[] | SmType[] | SmSeason
   subscription: SmSubscription[]
   rate_limit: SmRateLimit
   timezone: string
@@ -29,8 +29,6 @@ export interface SmTeam {
   last_played_at: Date | null
   players: SmTeamPlayer[]
 }
-
-export type SmGender = "male" | "female" | "neutral"
 
 export interface SmTeamPlayer {
   id: number
@@ -67,8 +65,6 @@ export interface SmPlayer {
   gender: SmGender
 }
 
-export type SmTeamType = "domestic" | "national"
-
 export interface SmRateLimit {
   resets_in_seconds: number
   remaining: number
@@ -77,7 +73,7 @@ export interface SmRateLimit {
 
 export interface SmSubscription {
   meta: SmMeta
-  plans: Plan[]
+  plans: SmPlan[]
   add_ons: any[]
   widgets: any[]
 }
@@ -88,8 +84,82 @@ export interface SmMeta {
   current_timestamp: number
 }
 
-export interface Plan {
+export interface SmPlan {
   plan: string
   sport: string
   category: string
 }
+
+export interface Welcome {
+  data: Data
+  subscription: Subscription[]
+  rate_limit: RateLimit
+  timezone: string
+}
+
+export interface SmSeason {
+  id: number
+  sport_id: number
+  league_id: number
+  tie_breaker_rule_id: number
+  name: string
+  finished: boolean
+  pending: boolean
+  is_current: boolean
+  starting_at: Date
+  ending_at: Date
+  standings_recalculated_at: Date
+  games_in_current_week: boolean
+  fixtures: SmFixture[]
+}
+
+export interface SmFixture {
+  id: number
+  sport_id: number
+  league_id: number
+  season_id: number
+  stage_id: number
+  group_id: number | null
+  aggregate_id: null
+  round_id: number | null
+  state_id: number
+  venue_id: number
+  name: string
+  starting_at: Date
+  result_info: null | string
+  leg: SmLeg
+  details: string
+  length: number
+  placeholder: boolean
+  has_odds: boolean
+  has_premium_odds: boolean
+  starting_at_timestamp: number
+  events: SmEvent[]
+}
+
+export interface SmEvent {
+  id: number
+  fixture_id: number
+  period_id: number
+  participant_id: number
+  type_id: number
+  section: SmSection
+  player_id: number | null
+  related_player_id: number | null
+  player_name: string
+  related_player_name: null | string
+  result: null | string
+  info: null | string
+  addition: null | string
+  minute: number
+  extra_minute: number | null
+  injured: boolean | null
+  on_bench: boolean
+  coach_id: number | null
+  sub_type_id: number | null
+}
+
+export type SmGender = "male" | "female" | "neutral"
+export type SmTeamType = "domestic" | "national"
+export type SmSection = "event"
+export type SmLeg = "1/1"
