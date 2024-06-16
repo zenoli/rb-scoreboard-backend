@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 import * as SportMonks from "./services/sportmonks.service"
 import { SmType } from "./types/sportmonks"
 import SportmonksType from "./models/SportmonksType"
-import { mapKeys } from "lodash"
+import { toModel } from "./utils"
 
 export async function importSportmonkTypes() {
   const sportmonkResponse = await SportMonks.get(
@@ -15,17 +15,14 @@ export async function importSportmonkTypes() {
 
   const sportmonkTypes = sportmonkResponse.data as SmType[]
 
+  console.log(sportmonkTypes[0])
+  console.log(toModel(sportmonkTypes[0]))
+
   await SportmonksType.bulkWrite(
     sportmonkTypes.map((input) => ({
       updateOne: {
         filter: { _id: input.id },
-        update: {
-          _id: input.id,
-          name: input.name,
-          code: input.code,
-          modelType: input.model_type,
-          statGroup: input.stat_group,
-        },
+        update: toModel(input),
         upsert: true,
       },
     }))
