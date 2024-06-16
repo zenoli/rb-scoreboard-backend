@@ -12,12 +12,16 @@ app.get("/", (req: Request, res: Response) => {
   res.send("RB Scoreboard Backend")
 })
 
-app.post("/import", (req: Request, res: Response) => {
+app.post("/import/sportmonks-types", (req: Request, res: Response) => {
   importSportmonkTypes()
+  res.send("Import")
+})
+
+app.post("/import/teams", (req: Request, res: Response) => {
+  importTeams()
   res.send("Import")
 })
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`)
 })
-

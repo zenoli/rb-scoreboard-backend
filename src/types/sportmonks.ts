@@ -27,15 +27,12 @@ export interface SmTeam {
   type: SmTeamType
   placeholder: boolean
   last_played_at: Date | null
-  players: SmPlayer[]
+  players: SmTeamPlayer[]
 }
 
-export enum SmGender {
-  Male = "male",
-  Neutral = "neutral",
-}
+export type SmGender = "male" | "female" | "neutral"
 
-export interface SmPlayer {
+export interface SmTeamPlayer {
   id: number
   transfer_id: null
   player_id: number
@@ -46,10 +43,10 @@ export interface SmPlayer {
   end: Date | null
   captain: boolean
   jersey_number: number
-  player: SmPlayerInfo
+  player: SmPlayer
 }
 
-export interface SmPlayerInfo {
+export interface SmPlayer {
   id: number
   sport_id: number
   country_id: number
@@ -70,10 +67,7 @@ export interface SmPlayerInfo {
   gender: SmGender
 }
 
-export enum SmTeamType {
-  Domestic = "domestic",
-  National = "national",
-}
+export type SmTeamType = "domestic" | "national"
 
 export interface SmRateLimit {
   resets_in_seconds: number
