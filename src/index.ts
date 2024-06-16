@@ -18,16 +18,6 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/imports", ImportsRouter)
 
-// app.post("/import/sportmonks-types", (req: Request, res: Response) => {
-//   importSportmonkTypes()
-//   res.send("Sportmonks Types import successful")
-// })
-//
-// app.post("/import/teams", (req: Request, res: Response) => {
-//   importTeamsAndPlayers()
-//   res.send("Teams Types import successful")
-// })
-
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`)
 })

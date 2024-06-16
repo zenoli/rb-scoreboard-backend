@@ -5,7 +5,7 @@ import { flatMap } from "lodash"
 import PlayerModel from "../models/player"
 import TeamModel from "../models/team"
 
-export async function importTeams() {
+export async function importFixtures() {
   const seasonId = process.env.SEASON_ID || ""
   const sportmonkResponse = await SportMonks.get(
     ["football", "teams", "seasons", seasonId],

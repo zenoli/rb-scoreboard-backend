@@ -1,6 +1,6 @@
 import * as SportMonks from "../services/sportmonks-api"
 import { SmType } from "../types/sportmonks"
-import SportmonksType from "../models/SportmonksType"
+import SportmonksType from "../models/sportmonks-type"
 import { toModel } from "../utils"
 
 export async function importSportmonkTypes() {
