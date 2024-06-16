@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from "express"
 import dotenv from "dotenv"
-import { importTeams } from "./import"
+import { importTeams, importSportmonkTypes } from "./import"
 
 dotenv.config()
 
@@ -12,7 +12,7 @@ app.get("/", (req: Request, res: Response) => {
 })
 
 app.post("/import", (req: Request, res: Response) => {
-  importTeams()
+  importSportmonkTypes()
   res.send("Import")
 })
 

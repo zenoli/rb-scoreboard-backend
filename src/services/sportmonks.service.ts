@@ -1,3 +1,5 @@
+import { SmResponse } from "../types/sportmonks"
+
 export async function get(
   routeSegments: string[],
   queryParams: URLSearchParams
@@ -13,5 +15,5 @@ export async function get(
       Authorization: process.env.API_TOKEN || "",
     },
   })
-  return await response.json()
+  return (await response.json()) as SmResponse
 }

@@ -1,8 +1,17 @@
-export interface Welcome {
-  data: Team[]
+export interface SmResponse {
+  data: Team[] | SmType[]
   subscription: Subscription[]
   rate_limit: RateLimit
   timezone: string
+}
+
+export interface SmType {
+  id: number
+  name: string
+  code: string
+  developer_name: string
+  model_type: string
+  stat_group: string | null
 }
 
 export interface Team {
