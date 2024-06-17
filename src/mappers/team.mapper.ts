@@ -53,10 +53,11 @@ export function mapEvent(smEvent: SmEvent) {
     fixture: smEvent.fixture_id,
     participant: smEvent.participant_id,
     player: smEvent.player_id,
+    type: smEvent.type_id,
     relatedPlayer: smEvent.related_player_id,
     ...omit(
       mapKeys(smEvent, (v, k) => camelCase(k)),
-      ["id", "fixture_id", "participant_id", "player_id", "related_player_id"]
+      ["id", "fixture_id", "participant_id", "player_id", "related_player_id", "type_id"]
     ),
   }
 }

@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express"
 import dotenv from "dotenv"
 import mongoose from "mongoose"
 import ImportsRouter from "./routes/imports"
+import ApiRouter from "./routes/api"
 
 dotenv.config()
 
@@ -17,6 +18,7 @@ app.get("/", (req: Request, res: Response) => {
 })
 
 app.use("/imports", ImportsRouter)
+app.use("/api", ApiRouter)
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`)
