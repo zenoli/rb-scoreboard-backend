@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express"
-import { importSportmonkTypes, importTeams } from "../imports"
+import { importFixtures, importSportmonkTypes, importTeams } from "../imports"
 
 const router: Router = Router()
 
@@ -14,8 +14,8 @@ router.post("/teams", async (req: Request, res: Response) => {
 })
 
 router.post("/fixtures", async (req: Request, res: Response) => {
-  await importTeams()
-  res.send("Team and Player import successful")
+  await importFixtures()
+  res.send("Fixture import successful")
 })
 
 export default router

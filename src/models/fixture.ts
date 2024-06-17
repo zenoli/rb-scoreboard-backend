@@ -4,7 +4,7 @@ const { Schema, model } = mongoose
 const FixtureModel = model(
   "Fixture",
   new Schema({
-    Id: { type: Number, required: true },
+    _id: { type: Number, required: true },
     sportId: { type: Number, required: true },
     leagueId: { type: Number, required: true },
     seasonId: { type: Number, required: true },

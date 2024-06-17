@@ -1,8 +1,8 @@
 import mongoose from "mongoose"
 const { Schema, model } = mongoose
 
-const EventModel = model(
-  "Event",
+const DraftModel = model(
+  "Draft",
   new Schema({
     _id: { type: Number, required: true },
     fixture: { type: Number, ref: "Fixture" },
@@ -26,4 +26,4 @@ const EventModel = model(
   })
 )
 
-export default EventModel
+export default DraftModel

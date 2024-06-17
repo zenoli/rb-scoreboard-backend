@@ -1,4 +1,4 @@
-import { SmTeam, SmTeamPlayer } from "../types/sportmonks"
+import { SmEvent, SmFixture, SmTeam, SmTeamPlayer } from "../types/sportmonks"
 import { camelCase, mapKeys, omit } from "lodash"
 
 export function mapTeam(smTeam: SmTeam) {
@@ -33,4 +33,30 @@ export function mapPlayer(smTeamPlayer: SmTeamPlayer) {
   }
 
   return { ...mappedPlayer, ...mappedTeamPlayer }
+}
+
+export function mapFixture(smFixture: SmFixture) {
+  return {
+    _id: smFixture.id,
+    events: smFixture.events.map((event) => event.id),
+    participants: smFixture.participants.map((participant) => participant.id),
+    ...omit(
+      mapKeys(smFixture, (v, k) => camelCase(k)),
+      ["id", "events", "participants"]
+    ),
+  }
+}
+
+export function mapEvent(smEvent: SmEvent) {
+  return {
+    _id: smEvent.id,
+    fixture: smEvent.fixture_id,
+    participant: smEvent.participant_id,
+    player: smEvent.player_id,
+    relatedPlayer: smEvent.related_player_id,
+    ...omit(
+      mapKeys(smEvent, (v, k) => camelCase(k)),
+      ["id", "fixture_id", "participant_id", "player_id", "related_player_id"]
+    ),
+  }
 }

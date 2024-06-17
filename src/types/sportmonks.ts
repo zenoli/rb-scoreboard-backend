@@ -135,6 +135,7 @@ export interface SmFixture {
   has_premium_odds: boolean
   starting_at_timestamp: number
   events: SmEvent[]
+  participants: SmTeam[]
 }
 
 export interface SmEvent {
