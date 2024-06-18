@@ -1,5 +1,4 @@
-export { importSportmonkTypes } from "./sportmonks-types"
-export { importTeams } from "./teams"
-export { importFixtures } from "./fixtures"
-export { importDrafts } from "./drafts"
-
+export * from "./types"
+export * from "./teams"
+export * from "./fixtures"
+export * from "./drafts"

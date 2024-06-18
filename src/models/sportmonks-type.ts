@@ -1,14 +1,16 @@
-import mongoose from "mongoose"
+import mongoose, { InferRawDocType } from "mongoose"
 const { Schema, model } = mongoose
 
-const sportmonksTypeSchema = new Schema({
+const schemaDefinition = {
   _id: Number,
   name: String,
   code: String,
   developerName: String,
   modelType: String,
   statGroup: String,
-})
+}
 
-const TypeModel = model("SportmonksType", sportmonksTypeSchema)
+const TypeModel = model("Type", new Schema(schemaDefinition))
+
+export type Type = InferRawDocType<typeof schemaDefinition>
 export default TypeModel

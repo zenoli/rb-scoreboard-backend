@@ -1,7 +1,7 @@
 import * as Sportmonks from "../types/sportmonks"
 import * as SportmonksApi from "../services/sportmonks-api"
-import { mapEvent, mapFixture } from "../mappers/team.mapper"
 import { flatMap } from "lodash"
+import { mapEvent, mapFixture } from "../mappers"
 import FixtureModel from "../models/fixture"
 import EventModel from "../models/event"
 

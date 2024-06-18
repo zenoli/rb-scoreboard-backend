@@ -1,6 +1,6 @@
 import * as Sportmonks from "../types/sportmonks"
 import * as SportmonksApi from "../services/sportmonks-api"
-import { mapPlayer, mapTeam } from "../mappers/team.mapper"
+import { mapPlayer, mapTeam } from "../mappers"
 import { flatMap } from "lodash"
 import PlayerModel from "../models/player"
 import TeamModel from "../models/team"
