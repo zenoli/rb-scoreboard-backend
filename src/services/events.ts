@@ -16,7 +16,6 @@ export async function getEvents() {
       populate: { path: "participants", select: "name" },
     },
   ])
-  console.log(events[0])
 
   return events
 }

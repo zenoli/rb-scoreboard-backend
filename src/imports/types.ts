@@ -1,6 +1,6 @@
-import * as Sportmonks from "../types/sportmonks"
-import * as SportmonksApi from "../services/sportmonks-api"
-import TypeModel from "../models/sportmonks-type"
+import * as Sportmonks from "../sportmonks/types"
+import * as SportmonksApi from "../sportmonks/api"
+import TypeModel from "../models/type"
 import { mapType } from "../mappers"
 
 export async function importTypes() {

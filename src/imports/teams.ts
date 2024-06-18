@@ -1,5 +1,5 @@
-import * as Sportmonks from "../types/sportmonks"
-import * as SportmonksApi from "../services/sportmonks-api"
+import * as Sportmonks from "../sportmonks/types"
+import * as SportmonksApi from "../sportmonks/api"
 import { mapPlayer, mapTeam } from "../mappers"
 import { flatMap } from "lodash"
 import PlayerModel from "../models/player"

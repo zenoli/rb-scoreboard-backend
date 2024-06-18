@@ -1,5 +1,5 @@
-import * as Sportmonks from "../types/sportmonks"
-import * as SportmonksApi from "../services/sportmonks-api"
+import * as Sportmonks from "../sportmonks/types"
+import * as SportmonksApi from "../sportmonks/api"
 import { flatMap } from "lodash"
 import { mapEvent, mapFixture } from "../mappers"
 import FixtureModel from "../models/fixture"
@@ -15,7 +15,6 @@ export async function importFixtures() {
   const season = sportmonkResponse.data as Sportmonks.Season
   const fixtures = season.fixtures
   const events = flatMap(fixtures, (fixture) => fixture.events)
-  console.log(fixtures[0])
   await Promise.all([
     FixtureModel.bulkWrite(
       fixtures.map((fixture) => ({

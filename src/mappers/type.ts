@@ -1,4 +1,4 @@
-import * as Sportmonks from "../types/sportmonks"
+import * as Sportmonks from "../sportmonks/types"
 import { camelCase, mapKeys, omit } from "lodash"
 
 export function mapType(type: Sportmonks.Type) {

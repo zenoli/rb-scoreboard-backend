@@ -1,4 +1,4 @@
-import * as Sportmonks from "../types/sportmonks"
+import * as Sportmonks from "../sportmonks/types"
 
 export async function get(
   routeSegments: string[],
