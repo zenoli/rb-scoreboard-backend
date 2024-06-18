@@ -1,5 +1,10 @@
 import { Router, Request, Response } from "express"
-import { importDrafts, importFixtures, importSportmonkTypes, importTeams } from "../imports"
+import {
+  importDrafts,
+  importFixtures,
+  importSportmonkTypes,
+  importTeams,
+} from "../imports"
 
 const router: Router = Router()
 

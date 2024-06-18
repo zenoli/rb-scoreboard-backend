@@ -10,5 +10,5 @@ const sportmonksTypeSchema = new Schema({
   statGroup: String,
 })
 
-const SportmonksType = model("SportmonksType", sportmonksTypeSchema)
-export default SportmonksType
+const TypeModel = model("SportmonksType", sportmonksTypeSchema)
+export default TypeModel

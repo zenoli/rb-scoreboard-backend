@@ -1,7 +1,7 @@
-import { SmEvent, SmFixture, SmTeam, SmTeamPlayer } from "../types/sportmonks"
+import * as Sportmonks from "../types/sportmonks"
 import { camelCase, mapKeys, omit } from "lodash"
 
-export function mapTeam(smTeam: SmTeam) {
+export function mapTeam(smTeam: Sportmonks.Team) {
   return {
     _id: smTeam.id,
     players: smTeam.players.map((player) => player.player_id),
@@ -12,7 +12,7 @@ export function mapTeam(smTeam: SmTeam) {
   }
 }
 
-export function mapPlayer(smTeamPlayer: SmTeamPlayer) {
+export function mapPlayer(smTeamPlayer: Sportmonks.TeamPlayer) {
   const smPlayer = smTeamPlayer.player
   const mappedPlayer = {
     _id: smPlayer.id,
@@ -35,7 +35,7 @@ export function mapPlayer(smTeamPlayer: SmTeamPlayer) {
   return { ...mappedPlayer, ...mappedTeamPlayer }
 }
 
-export function mapFixture(smFixture: SmFixture) {
+export function mapFixture(smFixture: Sportmonks.Fixture) {
   return {
     _id: smFixture.id,
     events: smFixture.events.map((event) => event.id),
@@ -47,7 +47,7 @@ export function mapFixture(smFixture: SmFixture) {
   }
 }
 
-export function mapEvent(smEvent: SmEvent) {
+export function mapEvent(smEvent: Sportmonks.Event) {
   return {
     _id: smEvent.id,
     fixture: smEvent.fixture_id,
@@ -57,7 +57,14 @@ export function mapEvent(smEvent: SmEvent) {
     relatedPlayer: smEvent.related_player_id,
     ...omit(
       mapKeys(smEvent, (v, k) => camelCase(k)),
-      ["id", "fixture_id", "participant_id", "player_id", "related_player_id", "type_id"]
+      [
+        "id",
+        "fixture_id",
+        "participant_id",
+        "player_id",
+        "related_player_id",
+        "type_id",
+      ]
     ),
   }
 }

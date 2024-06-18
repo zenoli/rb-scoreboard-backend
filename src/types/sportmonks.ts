@@ -1,11 +1,11 @@
-export interface SmResponse {
-  data: SmTeam[] | SmType[] | SmSeason
-  subscription: SmSubscription[]
-  rate_limit: SmRateLimit
+export interface Response {
+  data: Team[] | Type[] | Season
+  subscription: Subscription[]
+  rate_limit: RateLimit
   timezone: string
 }
 
-export interface SmType {
+export interface Type {
   id: number
   name: string
   code: string
@@ -14,23 +14,23 @@ export interface SmType {
   stat_group: string | null
 }
 
-export interface SmTeam {
+export interface Team {
   id: number
   sport_id: number
   country_id: number | null
   venue_id: number | null
-  gender: SmGender
+  gender: Gender
   name: string
   short_code: null | string
   image_path: string
   founded: number | null
-  type: SmTeamType
+  type: TeamType
   placeholder: boolean
   last_played_at: Date | null
-  players: SmTeamPlayer[]
+  players: TeamPlayer[]
 }
 
-export interface SmTeamPlayer {
+export interface TeamPlayer {
   id: number
   transfer_id: null
   player_id: number
@@ -41,10 +41,10 @@ export interface SmTeamPlayer {
   end: Date | null
   captain: boolean
   jersey_number: number
-  player: SmPlayer
+  player: Player
 }
 
-export interface SmPlayer {
+export interface Player {
   id: number
   sport_id: number
   country_id: number
@@ -62,42 +62,35 @@ export interface SmPlayer {
   height: number
   weight: number | null
   date_of_birth: Date
-  gender: SmGender
+  gender: Gender
 }
 
-export interface SmRateLimit {
+export interface RateLimit {
   resets_in_seconds: number
   remaining: number
   requested_entity: string
 }
 
-export interface SmSubscription {
-  meta: SmMeta
-  plans: SmPlan[]
+export interface Subscription {
+  meta: Meta
+  plans: Plan[]
   add_ons: any[]
   widgets: any[]
 }
 
-export interface SmMeta {
+export interface Meta {
   trial_ends_at: null
   ends_at: Date
   current_timestamp: number
 }
 
-export interface SmPlan {
+export interface Plan {
   plan: string
   sport: string
   category: string
 }
 
-export interface Welcome {
-  data: Data
-  subscription: Subscription[]
-  rate_limit: RateLimit
-  timezone: string
-}
-
-export interface SmSeason {
+export interface Season {
   id: number
   sport_id: number
   league_id: number
@@ -110,10 +103,10 @@ export interface SmSeason {
   ending_at: Date
   standings_recalculated_at: Date
   games_in_current_week: boolean
-  fixtures: SmFixture[]
+  fixtures: Fixture[]
 }
 
-export interface SmFixture {
+export interface Fixture {
   id: number
   sport_id: number
   league_id: number
@@ -127,24 +120,24 @@ export interface SmFixture {
   name: string
   starting_at: Date
   result_info: null | string
-  leg: SmLeg
+  leg: Leg
   details: string
   length: number
   placeholder: boolean
   has_odds: boolean
   has_premium_odds: boolean
   starting_at_timestamp: number
-  events: SmEvent[]
-  participants: SmTeam[]
+  events: Event[]
+  participants: Team[]
 }
 
-export interface SmEvent {
+export interface Event {
   id: number
   fixture_id: number
   period_id: number
   participant_id: number
   type_id: number
-  section: SmSection
+  section: Section
   player_id: number | null
   related_player_id: number | null
   player_name: string
@@ -160,7 +153,8 @@ export interface SmEvent {
   sub_type_id: number | null
 }
 
-export type SmGender = "male" | "female" | "neutral"
-export type SmTeamType = "domestic" | "national"
-export type SmSection = "event"
-export type SmLeg = "1/1"
+export type Gender = "male" | "female" | "neutral"
+export type TeamType = "domestic" | "national"
+export type Section = "event"
+export type Leg = "1/1"
+

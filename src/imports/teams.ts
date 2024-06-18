@@ -1,5 +1,5 @@
-import * as SportMonks from "../services/sportmonks-api"
-import { SmTeam } from "../types/sportmonks"
+import * as Sportmonks from "../types/sportmonks"
+import * as SportmonksApi from "../services/sportmonks-api"
 import { mapPlayer, mapTeam } from "../mappers/team.mapper"
 import { flatMap } from "lodash"
 import PlayerModel from "../models/player"
@@ -7,12 +7,12 @@ import TeamModel from "../models/team"
 
 export async function importTeams() {
   const seasonId = process.env.SEASON_ID || ""
-  const sportmonkResponse = await SportMonks.get(
+  const sportmonkResponse = await SportmonksApi.get(
     ["football", "teams", "seasons", seasonId],
     new URLSearchParams({ include: "players.player" })
   )
 
-  const teams = sportmonkResponse.data as SmTeam[]
+  const teams = sportmonkResponse.data as Sportmonks.Team[]
   const nationalTeams = teams.filter((team) => team.type === "national")
   const teamPlayers = flatMap(nationalTeams, (team) => team.players)
 

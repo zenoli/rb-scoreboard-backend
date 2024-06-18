@@ -1,4 +1,4 @@
-import { SmResponse } from "../types/sportmonks"
+import * as Sportmonks from "../types/sportmonks"
 
 export async function get(
   routeSegments: string[],
@@ -15,5 +15,5 @@ export async function get(
       Authorization: process.env.API_TOKEN || "",
     },
   })
-  return (await response.json()) as SmResponse
+  return (await response.json()) as Sportmonks.Response
 }
