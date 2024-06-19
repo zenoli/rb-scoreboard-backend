@@ -6,7 +6,7 @@ const schemaDefinition = {
   fixture: { type: Number, ref: "Fixture" },
   periodId: { type: Number, required: true },
   participant: { type: Number, ref: "Team" },
-  type: { type: Number, ref: "SportmonksType" },
+  type: { type: Number, ref: "Type" },
   section: { type: String },
   player: { type: Number, ref: "Player" },
   relatedPlayer: { type: Number, ref: "Player" },
