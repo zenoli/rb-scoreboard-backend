@@ -1,6 +1,8 @@
+import { groupBy } from "lodash"
 import DraftModel from "../models/draft"
 import EventModel from "../models/event"
 import * as Model from "../models/types"
+import * as EventIds from "../utils/event-ids"
 
 async function getAllEvents(): Promise<Model.PopulatedEvent[]> {
   return await EventModel.find({})
@@ -40,51 +42,78 @@ function extractTeams(event: Model.PopulatedEvent) {
   return { team, oponentTeam }
 }
 
+function extractEvent(event: Model.PopulatedEvent) {
+  return extractRbEvent(
+    event,
+    event.type.name,
+    event.player as Model.PopulatedPlayer
+  )
+}
+
+function extractAssistEvent(event: Model.PopulatedEvent) {
+  return extractRbEvent(
+    event,
+    "Assist",
+    event.relatedPlayer as Model.PopulatedPlayer
+  )
+}
+
+function extractRbEvent(
+  event: Model.PopulatedEvent,
+  eventName: string,
+  player: Model.PopulatedPlayer
+) {
+  const { team, oponentTeam } = extractTeams(event)
+  return {
+    name: eventName,
+    minute: event.minute,
+    extraMinute: event.extraMinute,
+    player: {
+      displayName: player.displayName,
+      imagePath: player.imagePath,
+      jerseyNumber: player.jerseyNumber,
+      position: player.position.name,
+      detailedPosision: player.detailedPosition.name,
+    },
+    team: {
+      name: team.name,
+      shortCode: team.shortCode,
+      imagePath: team.imagePath,
+    },
+    oponentTeam: {
+      name: oponentTeam.name,
+      shortCode: oponentTeam.shortCode,
+      imagePath: oponentTeam.imagePath,
+    },
+  }
+}
+
 export async function getScores() {
   const relevantEventIds = [
-    14, // Goal
-    18, // Substitution
-    19, // Yellow Card
-    20, // Red Card
-    21, // Yello/Red Card
+    EventIds.GOAL,
+    EventIds.SUBSTITUTION,
+    EventIds.YELLOW_CARD,
+    EventIds.RED_CARD,
+    EventIds.YELLOW_RED_CARD,
   ]
 
   const events = await getAllEvents()
   const drafts = await getDrafts()
 
-  console.log(drafts)
-  // console.log(events[0].fixture.participants[0] as Team)
   const relevantEvents = events.filter(
     (event) =>
       relevantEventIds.includes(event.type._id) && event.player !== null // Yellow cards by coaches don't resolve to a player
   )
 
-  const response = relevantEvents.map((event) => {
-    const { team, oponentTeam } = extractTeams(event)
-    const player = event.player as Model.PopulatedPlayer
-    return {
-      name: event.type.name,
-      minute: event.minute,
-      extraMinute: event.extraMinute,
-      player: {
-        displayName: player.displayName,
-        imagePath: player.imagePath,
-        jerseyNumber: player.jerseyNumber,
-        position: player.position.name,
-        detailedPosision: player.detailedPosition.name,
-      },
-      team: {
-        name: team.name,
-        shortCode: team.shortCode,
-        imagePath: team.imagePath,
-      },
-      oponentTeam: {
-        name: oponentTeam.name,
-        shortCode: oponentTeam.shortCode,
-        imagePath: oponentTeam.imagePath,
-      },
-    }
-  })
+  const { goalWithAssistEvents, nonGoalEvents } = groupBy(events, (event) =>
+    event.type._id === EventIds.GOAL && event.relatedPlayer !== null
+      ? "goalWithAssistEvents"
+      : "nonGoalEvents"
+  )
 
-  return response
+  const rbEvents = [
+    ...relevantEvents.map(extractEvent),
+    ...goalWithAssistEvents.map(extractAssistEvent),
+  ]
+  return rbEvents
 }
