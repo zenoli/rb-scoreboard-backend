@@ -8,7 +8,7 @@ const schemaDefinition = {
   venueId: { type: Number },
   gender: { type: String, required: true },
   name: { type: String, required: true },
-  shortCode: { type: String },
+  shortCode: { type: String, required: true },
   imagePath: { type: String, required: true },
   founded: { type: Number },
   type: { type: String, required: true },

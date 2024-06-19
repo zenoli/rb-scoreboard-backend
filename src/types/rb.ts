@@ -1,15 +1,9 @@
 export type User = "Olivier" | "Fabian" | "Jakob" | "Joel" | "Christian" | "Jan"
 
 export interface Event {
-  name:
-    | "goal"
-    | "assist"
-    | "substitution"
-    | "yellow-card"
-    | "red-card"
-    | "yellow-red-card"
+  name: string
   minute: number
-  extraMinute: number | null
+  extraMinute: number | undefined
   player: Player
   team: Team
   oponentTeam: Team
@@ -22,10 +16,11 @@ export interface Team {
 }
 
 export interface Player {
+  id: number
   displayName: string
   imagePath: string
-  jerseyNumber: number
-  team: Team
+  jerseyNumber: number | undefined
+  team?: Team
   position: string
-  detailedPosition: string
+  detailedPosition: string | undefined
 }

@@ -3,6 +3,7 @@ import DraftModel from "../models/draft"
 import EventModel from "../models/event"
 import * as Model from "../models/types"
 import * as EventIds from "../utils/event-ids"
+import * as Rb from "../types/rb"
 
 async function getAllEvents(): Promise<Model.PopulatedEvent[]> {
   return await EventModel.find({})
@@ -62,18 +63,19 @@ function extractRbEvent(
   event: Model.PopulatedEvent,
   eventName: string,
   player: Model.PopulatedPlayer
-) {
+): Rb.Event {
   const { team, oponentTeam } = extractTeams(event)
   return {
     name: eventName,
     minute: event.minute,
     extraMinute: event.extraMinute,
     player: {
+      id: player._id,
       displayName: player.displayName,
       imagePath: player.imagePath,
       jerseyNumber: player.jerseyNumber,
       position: player.position.name,
-      detailedPosision: player.detailedPosition.name,
+      detailedPosition: player.detailedPosition.name,
     },
     team: {
       name: team.name,
@@ -88,17 +90,25 @@ function extractRbEvent(
   }
 }
 
-export async function getScores() {
+function computeScores(drafts: Model.Draft[], rbEvents: Rb.Event[]) {
+  const eventsByUser = groupBy(rbEvents, (rbEvent) => {
+    const draft = drafts.find((draft) =>
+      draft.players.includes(rbEvent.player.id)
+    )
+    return draft !== undefined ? draft.user : "none"
+  })
+
+  return eventsByUser
+}
+
+function extractRbEvents(events: Model.PopulatedEvent[]) {
   const relevantEventIds = [
     EventIds.GOAL,
-    EventIds.SUBSTITUTION,
+    // EventIds.SUBSTITUTION, // TODO: Include once we handle clean sheets
     EventIds.YELLOW_CARD,
     EventIds.RED_CARD,
     EventIds.YELLOW_RED_CARD,
   ]
-
-  const events = await getAllEvents()
-  const drafts = await getDrafts()
 
   const relevantEvents = events.filter(
     (event) =>
@@ -116,4 +126,13 @@ export async function getScores() {
     ...goalWithAssistEvents.map(extractAssistEvent),
   ]
   return rbEvents
+}
+
+export async function getScores() {
+  const events = await getAllEvents()
+  const drafts = await getDrafts()
+
+  const rbEvents = extractRbEvents(events)
+
+  return computeScores(drafts, rbEvents)
 }
