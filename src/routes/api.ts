@@ -8,7 +8,7 @@ router.get("/events", async (req: Request, res: Response) => {})
 
 router.get("/scores", async (req: Request, res: Response) => {
   const events = await getScores()
-  res.send(events)
+  res.json(events)
 })
 
 router.get("/drafts", async (req: Request, res: Response) => {
