@@ -104,7 +104,7 @@ function computeScores(drafts: Model.Draft[], rbEvents: Rb.Event[]) {
     else return "booking"
   }
 
-  const scoreBoard = omit(
+  const scoreboard = omit(
     mapValues(eventsByUser, (events) =>
       mapValues(
         groupBy(events, (event) => toScoreType(event.name)),
@@ -114,7 +114,7 @@ function computeScores(drafts: Model.Draft[], rbEvents: Rb.Event[]) {
     ["none"]
   ) as Record<string, Rb.Score>
 
-  return mapValues(scoreBoard, (score) => ({
+  return mapValues(scoreboard, (score) => ({
     ...score,
     total: sum(Object.values(score)),
   }))

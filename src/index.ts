@@ -7,7 +7,7 @@ import ApiRouter from "./routes/api"
 dotenv.config()
 
 const app: Express = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 
 mongoose.connect(process.env.MONGO_URL || "", {
   dbName: "euro-2024",
