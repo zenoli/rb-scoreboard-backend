@@ -1,4 +1,4 @@
-import { groupBy } from "lodash"
+import { groupBy, mapValues, omit, sum } from "lodash"
 import DraftModel from "../models/draft"
 import EventModel from "../models/event"
 import * as Model from "../models/types"
@@ -98,7 +98,26 @@ function computeScores(drafts: Model.Draft[], rbEvents: Rb.Event[]) {
     return draft !== undefined ? draft.user : "none"
   })
 
-  return eventsByUser
+  function toScoreType(eventName: string): Rb.ScoreType {
+    if (eventName === "Goal") return "goal"
+    if (eventName === "Assist") return "assist"
+    else return "booking"
+  }
+
+  const scoreBoard = omit(
+    mapValues(eventsByUser, (events) =>
+      mapValues(
+        groupBy(events, (event) => toScoreType(event.name)),
+        (events) => events.length
+      )
+    ),
+    ["none"]
+  ) as Record<string, Rb.Score>
+
+  return mapValues(scoreBoard, (score) => ({
+    ...score,
+    total: sum(Object.values(score)),
+  }))
 }
 
 function extractRbEvents(events: Model.PopulatedEvent[]) {

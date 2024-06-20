@@ -1,4 +1,4 @@
-export type User = "Olivier" | "Fabian" | "Jakob" | "Joel" | "Christian" | "Jan"
+export type User = "Olivier" | "Fabian" | "Jakob" | "Joel" | "Chris" | "Jan"
 
 export interface Event {
   name: string
@@ -23,4 +23,10 @@ export interface Player {
   team?: Team
   position: string
   detailedPosition: string | undefined
+}
+
+export type ScoreType = "goal" | "assist" | "booking" | "cleanSheet" | "total"
+
+export type Score = {
+  [key in ScoreType]: number
 }
