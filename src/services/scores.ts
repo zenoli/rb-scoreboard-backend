@@ -90,6 +90,18 @@ function extractRbEvent(
   }
 }
 
+function computeEventsByUsers(drafts: Model.Draft[], rbEvents: Rb.Event[]) {
+  return omit(
+    groupBy(rbEvents, (rbEvent) => {
+      const draft = drafts.find((draft) =>
+        draft.players.includes(rbEvent.player.id)
+      )
+      return draft !== undefined ? draft.user : "none"
+    }),
+    ["none"]
+  )
+}
+
 function computeScores(drafts: Model.Draft[], rbEvents: Rb.Event[]) {
   const eventsByUser = groupBy(rbEvents, (rbEvent) => {
     const draft = drafts.find((draft) =>
@@ -99,7 +111,7 @@ function computeScores(drafts: Model.Draft[], rbEvents: Rb.Event[]) {
   })
 
   function toScoreType(eventName: string): Rb.ScoreType {
-    if (eventName === "Goal") return "goal"
+    if (eventName === "Goal" || eventName === "Penalty") return "goal"
     if (eventName === "Assist") return "assist"
     else return "booking"
   }
@@ -123,6 +135,7 @@ function computeScores(drafts: Model.Draft[], rbEvents: Rb.Event[]) {
 function extractRbEvents(events: Model.PopulatedEvent[]) {
   const relevantEventIds = [
     EventIds.GOAL,
+    EventIds.PENALTY,
     // EventIds.SUBSTITUTION, // TODO: Include once we handle clean sheets
     EventIds.YELLOW_CARD,
     EventIds.RED_CARD,
@@ -154,4 +167,5 @@ export async function getScores() {
   const rbEvents = extractRbEvents(events)
 
   return computeScores(drafts, rbEvents)
+  // return computeEventsByUsers(drafts, rbEvents)
 }
