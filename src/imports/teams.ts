@@ -6,7 +6,7 @@ import PlayerModel from "../models/player"
 import TeamModel from "../models/team"
 
 export async function importTeams() {
-  const seasonId = process.env.SEASON_ID || ""
+  const seasonId = process.env.SEASON_ID || "22842"
   const sportmonkResponse = await SportmonksApi.get(
     ["football", "teams", "seasons", seasonId],
     new URLSearchParams({ include: "players.player" })

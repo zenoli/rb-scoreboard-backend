@@ -6,7 +6,7 @@ import FixtureModel from "../models/fixture"
 import EventModel from "../models/event"
 
 export async function importFixtures() {
-  const seasonId = process.env.SEASON_ID || ""
+  const seasonId = process.env.SEASON_ID || "22842"
   const sportmonkResponse = await SportmonksApi.get(
     ["football", "seasons", seasonId],
     new URLSearchParams({ include: "fixtures.events;fixtures.participants" })
