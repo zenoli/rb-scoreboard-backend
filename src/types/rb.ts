@@ -9,6 +9,13 @@ export interface Event {
   oponentTeam: Team
 }
 
+export type CleanSheetEvent = Omit<
+  Event,
+  "minute" | "extraMinute" | "oponentTeam"
+> & {
+  cleanSheets: number
+}
+
 export interface Team {
   name: string
   shortCode: string

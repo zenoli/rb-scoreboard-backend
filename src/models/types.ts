@@ -11,6 +11,7 @@ export { Fixture } from "./fixture"
 export { Player } from "./player"
 export { Type } from "./type"
 export { Team } from "./team"
+export { CleanSheet } from "./clean-sheet"
 
 export type PopulatedDraft = Omit<Draft, "players"> & {
   players: PopulatedPlayer[]
