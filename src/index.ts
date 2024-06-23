@@ -9,7 +9,18 @@ dotenv.config()
 const app: Express = express()
 const port = process.env.PORT || 3001
 
-mongoose.connect(process.env.MONGO_URL || "", {
+const localDevelopment = process.env.STAGE === "local"
+if (localDevelopment) {
+  console.log("Running locally. Using MONGO_URL")
+} else {
+  console.log("Running on railway. Using MONGO_PRIVATE_URL")
+}
+
+// Use private network url when run on railway.app
+const mongoUrl = localDevelopment
+  ? process.env.MONGO_URL
+  : process.env.MONGO_PRIVATE_URL
+mongoose.connect(mongoUrl || "", {
   dbName: "euro-2024",
 })
 
