@@ -4,6 +4,7 @@ import {
   importFixtures,
   importTypes,
   importTeams,
+  importCleanSheets,
 } from "../imports"
 
 const router: Router = Router()
@@ -26,6 +27,11 @@ router.post("/teams", async (req: Request, res: Response) => {
 router.post("/fixtures", async (req: Request, res: Response) => {
   await importFixtures()
   res.send("Fixture import successful")
+})
+
+router.post("/clean-sheets", async (req: Request, res: Response) => {
+  await importCleanSheets()
+  res.send("Clean Sheets import successful")
 })
 
 export default router
