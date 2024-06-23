@@ -35,9 +35,6 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/imports", ImportsRouter)
 app.use("/api", ApiRouter)
 
-// app.listen(port, () => {
-//   console.log(`[server]: Server is running at http://localhost:${port}`)
-// })
 app.listen(port, "::", () => {
   console.log(`Server listening on [::]${port}`)
 })

@@ -1,8 +1,8 @@
 services:
-  rb-scores-backend:
-    image: zenoli/rb-scores-backend
+  rb-scoreboard-backend:
+    image: zenoli/rb-scoreboard-backend
     build: .
-    container_name: rb-scores-backend
+    container_name: rb-scoreboard-backend
     environment:
         MONGO_URL: $MONGO_URL
     env_file:
