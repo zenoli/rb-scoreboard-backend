@@ -1,0 +1,13 @@
+version: '3.9'
+services:
+  rb-scores-backend:
+    image: zenoli/rb-scores-backend
+    build: .
+    container_name: rb-scores-backend
+    environment:
+        MONGO_URL: $MONGO_URL
+    env_file:
+      - .env
+    ports:
+      - "3001:3001"
+
