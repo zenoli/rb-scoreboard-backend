@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express"
-import { getScores } from "../services/scores"
+import { getScoreEvents, getScores } from "../services/scores"
 import { getDrafts } from "../services/drafts"
 
 const router: Router = Router()
@@ -8,6 +8,11 @@ router.get("/events", async (req: Request, res: Response) => {})
 
 router.get("/scores", async (req: Request, res: Response) => {
   const events = await getScores()
+  res.json(events)
+})
+
+router.get("/scores/events", async (req: Request, res: Response) => {
+  const events = await getScoreEvents()
   res.json(events)
 })
 
