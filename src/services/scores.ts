@@ -1,4 +1,6 @@
 import { groupBy, mapValues, omit, sum } from "lodash"
+import memoize from "memoizee"
+
 import removeAccents from "remove-accents"
 import DraftModel from "../models/draft"
 import EventModel from "../models/event"
@@ -229,22 +231,27 @@ function getCleanSheetEvents(
 
 export async function getScores() {
   const { eventsByUser, cleanSheetEventsByUser } = await getScoreEvents()
-  const events = await getAllEvents()
   return computeScores(eventsByUser, cleanSheetEventsByUser)
 }
 
-export async function getScoreEvents() {
-  const events = await getAllEvents()
-  const cleanSheets = await getCleanSheets()
-  const drafts = await getDrafts()
-  const populatedDrafts = await getPopulatedDrafts()
+export const getScoreEvents = memoize(
+  async function () {
+    const [events, cleanSheets, drafts, populatedDrafts] = await Promise.all([
+      getAllEvents(),
+      getCleanSheets(),
+      getDrafts(),
+      getPopulatedDrafts(),
+    ])
 
-  const rbEvents = extractRbEvents(events)
-  const eventsByUser = getEventsByUsers(drafts, rbEvents)
-  const cleanSheetEventsByUser = getCleanSheetEvents(
-    populatedDrafts,
-    cleanSheets
-  )
+    const rbEvents = extractRbEvents(events)
+    const eventsByUser = getEventsByUsers(drafts, rbEvents)
+    const cleanSheetEventsByUser = getCleanSheetEvents(
+      populatedDrafts,
+      cleanSheets
+    )
 
-  return { eventsByUser, cleanSheetEventsByUser }
-}
+    return { eventsByUser, cleanSheetEventsByUser }
+  },
+  { maxAge: 5000 }
+)
+
