@@ -1,8 +1,9 @@
 import express, { Express, Request, Response } from "express"
 import dotenv from "dotenv"
 import mongoose from "mongoose"
-import ImportsRouter from "./routes/imports"
-import ApiRouter from "./routes/api"
+import { ApiRouter } from "./routes/api"
+import { ImportsRouter } from "./routes/imports"
+import morgan from "morgan"
 
 function connectToMongoDB() {
   const localDevelopment = process.env.STAGE === "local"
@@ -32,6 +33,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("RB Scoreboard Backend")
 })
 
+app.use(morgan("tiny"))
 app.use("/imports", ImportsRouter)
 app.use("/api", ApiRouter)
 
