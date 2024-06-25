@@ -1,7 +1,9 @@
 import { Router, Request, Response } from "express"
-import { getScoreEvents, getScoreEventsOfUser } from "../../services/events"
 import { getUsers } from "../../services/users"
-import { getPopulatedDrafts, getPopulatedDraftsOfUser } from "../../services/drafts"
+import {
+  getPopulatedDrafts,
+  getPopulatedDraftsOfUser,
+} from "../../services/drafts"
 
 const UsersRouter: Router = Router()
 

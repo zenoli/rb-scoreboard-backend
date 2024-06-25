@@ -1,11 +1,11 @@
 import { groupBy, mapValues, sum } from "lodash"
 import * as Rb from "../types/rb"
-import { getCleanSheetEvents } from "./clean-sheets"
-import { getScoreEvents } from "./events"
+import { getUsersToCleanSheetsMap } from "./clean-sheets"
+import { getUserToEventsMap } from "./events"
 
 function computeScores(
-  eventsByUser: Record<string, Rb.Event[]>,
-  cleanSheetEventsByUser: Record<string, Rb.CleanSheetEvent[]>
+  userToEventMap: Record<string, Rb.Event[]>,
+  userToCleanSheetsMap: Record<string, Rb.CleanSheetEvent[]>
 ): Record<string, Rb.Score> {
   function toScoreType(eventName: string): Rb.ScoreType {
     if (eventName === "Goal" || eventName === "Penalty") return "goal"
@@ -13,7 +13,7 @@ function computeScores(
     else return "booking"
   }
 
-  const eventScores = mapValues(eventsByUser, (events) =>
+  const eventScores = mapValues(userToEventMap, (events) =>
     mapValues(
       groupBy(events, (event) => toScoreType(event.name)),
       (events) => events.length
@@ -21,7 +21,7 @@ function computeScores(
   ) as Record<string, Rb.Score>
 
   const cleanSheetScores = mapValues(
-    cleanSheetEventsByUser,
+    userToCleanSheetsMap,
     (cleanSheetEvents) =>
       sum(cleanSheetEvents.map((event) => event.cleanSheets))
   )
@@ -49,10 +49,9 @@ function computeScores(
 }
 
 export async function getScores() {
-  const [eventsByUser, cleanSheetEventsByUser] = await Promise.all([
-    getScoreEvents(),
-    getCleanSheetEvents(),
+  const [userToEventsMap, userToCleanSheetsMap] = await Promise.all([
+    getUserToEventsMap(),
+    getUsersToCleanSheetsMap(),
   ])
-  // return cleanSheetEventsByUser
-  return computeScores(eventsByUser, cleanSheetEventsByUser)
+  return computeScores(userToEventsMap, userToCleanSheetsMap)
 }

@@ -1,8 +1,9 @@
 import { Router, Request, Response } from "express"
 import { getScores } from "../../services/scores"
-import { getDrafts, getPopulatedDrafts } from "../../services/drafts"
+import { getPopulatedDrafts } from "../../services/drafts"
 import { EventsRouter } from "./events"
 import { UsersRouter } from "./users"
+import { CleanSheetsRouter } from "./clean-sheet-events"
 
 const ApiRouter: Router = Router()
 
@@ -17,6 +18,7 @@ ApiRouter.get("/drafts", async (req: Request, res: Response) => {
 })
 
 ApiRouter.use("/events", EventsRouter)
+ApiRouter.use("/clean-sheets", CleanSheetsRouter)
 ApiRouter.use("/users", UsersRouter)
 
 export { ApiRouter }

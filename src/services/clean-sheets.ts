@@ -11,10 +11,10 @@ async function getCleanSheets(): Promise<Model.CleanSheet[]> {
   return await CleanSheetModel.find({}).exec()
 }
 
-export async function getCleanSheetEvents(): Promise<
+export async function getUsersToCleanSheetsMap(): Promise<
   Record<string, Rb.CleanSheetEvent[]>
 > {
-  const [cleanSheetEvents, drafts] = await Promise.all([
+  const [cleanSheets, drafts] = await Promise.all([
     getCleanSheets(),
     getPopulatedDrafts(),
   ])
@@ -23,9 +23,9 @@ export async function getCleanSheetEvents(): Promise<
       (player) => player.position._id === TypeIds.GOALKEEPER
     )
 
-    const userCleanSheetEvents = mapValues(
+    const userCleanSheets = mapValues(
       groupBy(
-        cleanSheetEvents.filter((cleanSheetEvent) =>
+        cleanSheets.filter((cleanSheetEvent) =>
           goalKeepers
             .map((goalKeeper) => removeAccents(goalKeeper.displayName))
             .includes(removeAccents(cleanSheetEvent.name))
@@ -39,7 +39,7 @@ export async function getCleanSheetEvents(): Promise<
 
     for (const goalKeeper of goalKeepers) {
       const cleanSheetEvent =
-        userCleanSheetEvents[removeAccents(goalKeeper.displayName)]
+        userCleanSheets[removeAccents(goalKeeper.displayName)]
 
       if (cleanSheetEvent) {
         outputs.push({
@@ -54,4 +54,12 @@ export async function getCleanSheetEvents(): Promise<
   })
 
   return Object.fromEntries(result)
+}
+
+export async function getCleanSheetsOfUser(user: string) {
+  const userToEventsMap = await getUsersToCleanSheetsMap()
+  if (!Object.keys(userToEventsMap).includes(user)) {
+    throw new Error(`Unknown user ${user}`)
+  }
+  return userToEventsMap[user]
 }

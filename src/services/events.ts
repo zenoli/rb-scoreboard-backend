@@ -79,7 +79,7 @@ function extractRbEvent(
   }
 }
 
-function getUserToEventsMap(drafts: Model.Draft[], rbEvents: Rb.Event[]) {
+function computeUserToEventsMap(drafts: Model.Draft[], rbEvents: Rb.Event[]) {
   return omit(
     groupBy(rbEvents, (rbEvent) => {
       const draft = drafts.find((draft) =>
@@ -107,7 +107,7 @@ function computeScoreEvents(events: Model.PopulatedEvent[]) {
   return rbEvents
 }
 
-export async function getScoreEvents() {
+export async function getUserToEventsMap() {
   const relevantEventIds = [
     TypeIds.GOAL,
     TypeIds.PENALTY,
@@ -121,12 +121,12 @@ export async function getScoreEvents() {
   ])
 
   const rbEvents = computeScoreEvents(events)
-  const userToEventsMap = getUserToEventsMap(drafts, rbEvents)
+  const userToEventsMap = computeUserToEventsMap(drafts, rbEvents)
   return userToEventsMap
 }
 
-export async function getScoreEventsOfUser(user: string) {
-  const userToEventsMap = await getScoreEvents()
+export async function getEventsOfUser(user: string) {
+  const userToEventsMap = await getUserToEventsMap()
   if (!Object.keys(userToEventsMap).includes(user)) {
     throw new Error(`Unknown user ${user}`)
   }
