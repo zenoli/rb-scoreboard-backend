@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 import { ApiRouter } from "./routes/api"
 import { ImportsRouter } from "./routes/imports"
 import morgan from "morgan"
+import { startLiveDataImport } from "./cronjobs/import-task"
 
 function connectToMongoDB() {
   const localDevelopment = process.env.STAGE === "local"
@@ -40,3 +41,5 @@ app.use("/api", ApiRouter)
 app.listen(port, "::", () => {
   console.log(`Server listening on [::]${port}`)
 })
+
+startLiveDataImport()

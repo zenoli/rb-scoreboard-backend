@@ -9,7 +9,7 @@ export async function get(
   const baseUrl = `${apiUrl}/${apiVersion}`
   const route = routeSegments.join("/")
   const url = `${baseUrl}/${route}?${queryParams.toString()}`
-  console.log("URL", url)
+  // console.log("URL", url)
 
   const response = await fetch(url, {
     method: "GET",
