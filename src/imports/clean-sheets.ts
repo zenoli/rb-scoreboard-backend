@@ -39,7 +39,9 @@ export async function importCleanSheets() {
       position: item.player.nationalFieldPosition,
       cleanSheets: item.statistics[0]?.value || 0,
     }))
-    .filter((item) => item.cleanSheets > 0 && item.position === "GOALKEEPER")
+    .filter(
+      (item) => item.position === "GOALKEEPER"
+    )
   // console.log(cleanSheets)
   await CleanSheetModel.bulkWrite(
     cleanSheets.map((cleanSheet, i) => {
