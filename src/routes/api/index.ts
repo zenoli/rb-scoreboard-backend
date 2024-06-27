@@ -12,11 +12,6 @@ ApiRouter.get("/scores", async (req: Request, res: Response) => {
   res.json(events)
 })
 
-ApiRouter.get("/drafts", async (req: Request, res: Response) => {
-  const populatedDrafts = await getPopulatedDrafts()
-  res.send(populatedDrafts)
-})
-
 ApiRouter.use("/events", EventsRouter)
 ApiRouter.use("/clean-sheets", CleanSheetsRouter)
 ApiRouter.use("/users", UsersRouter)

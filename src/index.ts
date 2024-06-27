@@ -29,6 +29,7 @@ connectToMongoDB()
 
 const app: Express = express()
 const port = (process.env.PORT || 3001) as number
+const useLiveUpdates = (process.env.LIVE || true) as boolean
 
 app.get("/", (req: Request, res: Response) => {
   res.send("RB Scoreboard Backend")
@@ -42,4 +43,7 @@ app.listen(port, "::", () => {
   console.log(`Server listening on [::]${port}`)
 })
 
-startLiveDataImport()
+if (useLiveUpdates) {
+  console.log("Starting live updates...")
+  startLiveDataImport()
+}
