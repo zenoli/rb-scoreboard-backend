@@ -1,4 +1,5 @@
 import * as Sportmonks from "../sportmonks/types"
+import * as Model from "../models/types"
 import { camelCase, mapKeys, omit } from "lodash"
 
 export function mapFixture(fixture: Sportmonks.Fixture) {
@@ -10,5 +11,5 @@ export function mapFixture(fixture: Sportmonks.Fixture) {
       mapKeys(fixture, (v, k) => camelCase(k)),
       ["id", "events", "participants"]
     ),
-  }
+  } as Model.Fixture
 }

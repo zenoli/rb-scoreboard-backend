@@ -1,9 +1,13 @@
 import * as Sportmonks from "../sportmonks/types"
 import * as SportmonksApi from "../sportmonks/api"
+import * as Model from "../models/types"
 import { flatMap } from "lodash"
 import { mapEvent, mapFixture } from "../mappers"
 import FixtureModel from "../models/fixture"
 import EventModel from "../models/event"
+import mongoose from "mongoose"
+import { Mode } from "fs"
+import { updateCollection } from "../utils/db"
 
 export async function importFixtures() {
   const seasonId = process.env.SEASON_ID || "22842"
@@ -15,24 +19,9 @@ export async function importFixtures() {
   const season = sportmonkResponse.data as Sportmonks.Season
   const fixtures = season.fixtures
   const events = flatMap(fixtures, (fixture) => fixture.events)
+
   await Promise.all([
-    FixtureModel.bulkWrite(
-      fixtures.map((fixture) => ({
-        updateOne: {
-          filter: { _id: fixture.id },
-          update: mapFixture(fixture),
-          upsert: true,
-        },
-      }))
-    ),
-    EventModel.bulkWrite(
-      events.map((event) => ({
-        updateOne: {
-          filter: { _id: event.id },
-          update: mapEvent(event),
-          upsert: true,
-        },
-      }))
-    ),
+    updateCollection<Model.Fixture>(FixtureModel, fixtures.map(mapFixture)),
+    updateCollection<Model.Event>(EventModel, events.map(mapEvent)),
   ])
 }

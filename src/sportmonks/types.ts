@@ -11,34 +11,34 @@ export interface Type {
   code: string
   developer_name: string
   model_type: string
-  stat_group: string | null
+  stat_group: string | undefined
 }
 
 export interface Team {
   id: number
   sport_id: number
-  country_id: number | null
-  venue_id: number | null
+  country_id: number | undefined
+  venue_id: number | undefined
   gender: Gender
   name: string
-  short_code: null | string
+  short_code: undefined | string
   image_path: string
-  founded: number | null
+  founded: number | undefined
   type: TeamType
   placeholder: boolean
-  last_played_at: Date | null
+  last_played_at: Date | undefined
   players: TeamPlayer[]
 }
 
 export interface TeamPlayer {
   id: number
-  transfer_id: null
+  transfer_id: undefined
   player_id: number
   team_id: number
   position_id: number
   detailed_position_id: number
-  start: null
-  end: Date | null
+  start: undefined
+  end: Date | undefined
   captain: boolean
   jersey_number: number
   player: Player
@@ -49,10 +49,10 @@ export interface Player {
   sport_id: number
   country_id: number
   nationality_id: number
-  city_id: number | null
+  city_id: number | undefined
   position_id: number
   detailed_position_id: number
-  type_id: number | null
+  type_id: number | undefined
   common_name: string
   firstname: string
   lastname: string
@@ -60,7 +60,7 @@ export interface Player {
   display_name: string
   image_path: string
   height: number
-  weight: number | null
+  weight: number | undefined
   date_of_birth: Date
   gender: Gender
 }
@@ -79,7 +79,7 @@ export interface Subscription {
 }
 
 export interface Meta {
-  trial_ends_at: null
+  trial_ends_at: undefined
   ends_at: Date
   current_timestamp: number
 }
@@ -112,14 +112,14 @@ export interface Fixture {
   league_id: number
   season_id: number
   stage_id: number
-  group_id: number | null
-  aggregate_id: null
-  round_id: number | null
+  group_id: number | undefined
+  aggregate_id: undefined
+  round_id: number | undefined
   state_id: number
   venue_id: number
   name: string
   starting_at: Date
-  result_info: null | string
+  result_info: undefined | string
   leg: Leg
   details: string
   length: number
@@ -138,23 +138,22 @@ export interface Event {
   participant_id: number
   type_id: number
   section: Section
-  player_id: number | null
-  related_player_id: number | null
+  player_id?: number
+  related_player_id?: number
   player_name: string
-  related_player_name: null | string
-  result: null | string
-  info: null | string
-  addition: null | string
+  related_player_name?: string
+  result?: string
+  info?: string
+  addition?: string
   minute: number
-  extra_minute: number | null
-  injured: boolean | null
+  extra_minute?: number
+  injured?: boolean
   on_bench: boolean
-  coach_id: number | null
-  sub_type_id: number | null
+  coach_id?: number
+  sub_type_id?: number
 }
 
 export type Gender = "male" | "female" | "neutral"
 export type TeamType = "domestic" | "national"
 export type Section = "event"
 export type Leg = "1/1"
-
