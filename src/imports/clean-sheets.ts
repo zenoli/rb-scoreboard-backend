@@ -1,4 +1,3 @@
-import * as Model from "../models/types"
 import CleanSheetModel from "../models/clean-sheet"
 import { updateCollection } from "../utils/db"
 
@@ -43,5 +42,5 @@ export async function importCleanSheets() {
     }))
     .filter((item) => item.position === "GOALKEEPER")
 
-  await updateCollection<Model.CleanSheet>(CleanSheetModel, cleanSheets)
+  await updateCollection(CleanSheetModel, cleanSheets)
 }
