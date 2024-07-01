@@ -1,4 +1,6 @@
+import * as Model from "../models/types"
 import CleanSheetModel from "../models/clean-sheet"
+import { updateCollection } from "../utils/db"
 
 async function fetchRawCleanSheetsData() {
   const response = await fetch(
@@ -39,19 +41,7 @@ export async function importCleanSheets() {
       position: item.player.nationalFieldPosition,
       cleanSheets: item.statistics[0]?.value || 0,
     }))
-    .filter(
-      (item) => item.position === "GOALKEEPER"
-    )
-  // console.log(cleanSheets)
-  await CleanSheetModel.bulkWrite(
-    cleanSheets.map((cleanSheet, i) => {
-      return {
-        updateOne: {
-          filter: { _id: cleanSheet._id },
-          update: cleanSheet,
-          upsert: true,
-        },
-      }
-    })
-  )
+    .filter((item) => item.position === "GOALKEEPER")
+
+  await updateCollection<Model.CleanSheet>(CleanSheetModel, cleanSheets)
 }
