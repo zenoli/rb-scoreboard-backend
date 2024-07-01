@@ -8,7 +8,7 @@ export function mapPlayer(player: Model.PopulatedPlayer): Rb.Player {
     imagePath: player.imagePath,
     jerseyNumber: player.jerseyNumber,
     position: player.position.name,
-    detailedPosition: player.detailedPosition.name,
+    detailedPosition: player.detailedPosition?.name,
   }
 }
 

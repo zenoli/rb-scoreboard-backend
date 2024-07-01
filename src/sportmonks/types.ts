@@ -36,7 +36,7 @@ export interface TeamPlayer {
   player_id: number
   team_id: number
   position_id: number
-  detailed_position_id: number
+  detailed_position_id?: number
   start: undefined
   end: Date | undefined
   captain: boolean
@@ -51,7 +51,7 @@ export interface Player {
   nationality_id: number
   city_id: number | undefined
   position_id: number
-  detailed_position_id: number
+  detailed_position_id?: number
   type_id: number | undefined
   common_name: string
   firstname: string
