@@ -1,4 +1,5 @@
 import * as Sportmonks from "../sportmonks/types"
+import * as Model from "../models/types"
 import { camelCase, mapKeys, omit } from "lodash"
 
 export function mapEvent(event: Sportmonks.Event) {
@@ -20,5 +21,5 @@ export function mapEvent(event: Sportmonks.Event) {
         "type_id",
       ]
     ),
-  }
+  } as Model.Event
 }
