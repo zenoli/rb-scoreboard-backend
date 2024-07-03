@@ -1,5 +1,5 @@
 import CleanSheetModel from "../models/clean-sheet"
-import { updateCollection } from "../utils/db"
+import { initializeCollection, upsertCollection } from "../utils/db"
 
 async function fetchRawCleanSheetsData() {
   const response = await fetch(
@@ -30,7 +30,7 @@ async function fetchRawCleanSheetsData() {
   return (await response.json()) as any[]
 }
 
-export async function importCleanSheets() {
+export async function importCleanSheets(init = false) {
   const rawCleanSheetsData = await fetchRawCleanSheetsData()
   const cleanSheets = rawCleanSheetsData
     .map((item) => ({
@@ -42,5 +42,9 @@ export async function importCleanSheets() {
     }))
     .filter((item) => item.position === "GOALKEEPER")
 
-  await updateCollection(CleanSheetModel, cleanSheets)
+  if (init) {
+    await initializeCollection(CleanSheetModel, cleanSheets)
+  } else {
+    await upsertCollection(CleanSheetModel, cleanSheets)
+  }
 }

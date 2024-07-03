@@ -4,9 +4,9 @@ import { flatMap } from "lodash"
 import { mapEvent, mapFixture } from "../mappers"
 import FixtureModel from "../models/fixture"
 import EventModel from "../models/event"
-import { updateCollection } from "../utils/db"
+import { initializeCollection, upsertCollection } from "../utils/db"
 
-export async function importFixtures() {
+export async function importFixtures(init = false) {
   const seasonId = process.env.SEASON_ID || "22842"
   const sportmonkResponse = await SportmonksApi.get(
     ["football", "seasons", seasonId],
@@ -17,8 +17,15 @@ export async function importFixtures() {
   const fixtures = season.fixtures
   const events = flatMap(fixtures, (fixture) => fixture.events)
 
-  await Promise.all([
-    updateCollection(FixtureModel, fixtures.map(mapFixture)),
-    updateCollection(EventModel, events.map(mapEvent)),
-  ])
+  if (init) {
+    await Promise.all([
+      initializeCollection(FixtureModel, fixtures.map(mapFixture)),
+      initializeCollection(EventModel, events.map(mapEvent)),
+    ])
+  } else {
+    await Promise.all([
+      upsertCollection(FixtureModel, fixtures.map(mapFixture)),
+      upsertCollection(EventModel, events.map(mapEvent)),
+    ])
+  }
 }

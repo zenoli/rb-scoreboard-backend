@@ -4,7 +4,10 @@ import mongoose from "mongoose"
 import { ApiRouter } from "./routes/api"
 import { ImportsRouter } from "./routes/imports"
 import morgan from "morgan"
-import { startLiveDataImport } from "./cronjobs/import-task"
+import {
+  startInitialDataImport,
+  startLiveDataImport,
+} from "./cronjobs/import-tasks"
 
 function connectToMongoDB() {
   const localDevelopment = process.env.STAGE === "local"
@@ -44,6 +47,9 @@ app.listen(port, "::", () => {
 })
 
 if (useLiveUpdates) {
-  console.log("Starting live updates...")
+  console.log("Starting live import cronjob...")
   startLiveDataImport()
 }
+
+startInitialDataImport()
+console.log("Starting inital data import cronjob...")

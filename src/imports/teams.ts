@@ -4,9 +4,9 @@ import { mapPlayer, mapTeam } from "../mappers"
 import { flatMap } from "lodash"
 import PlayerModel from "../models/player"
 import TeamModel from "../models/team"
-import { updateCollection } from "../utils/db"
+import { initializeCollection, upsertCollection } from "../utils/db"
 
-export async function importTeams() {
+export async function importTeams(init = false) {
   const seasonId = process.env.SEASON_ID || "22842"
   const sportmonkResponse = await SportmonksApi.get(
     ["football", "teams", "seasons", seasonId],
@@ -17,8 +17,15 @@ export async function importTeams() {
   const nationalTeams = teams.filter((team) => team.type === "national")
   const teamPlayers = flatMap(nationalTeams, (team) => team.players)
 
-  await Promise.all([
-    updateCollection(TeamModel, nationalTeams.map(mapTeam)),
-    updateCollection(PlayerModel, teamPlayers.map(mapPlayer)),
-  ])
+  if (init) {
+    await Promise.all([
+      initializeCollection(TeamModel, nationalTeams.map(mapTeam)),
+      initializeCollection(PlayerModel, teamPlayers.map(mapPlayer)),
+    ])
+  } else {
+    await Promise.all([
+      upsertCollection(TeamModel, nationalTeams.map(mapTeam)),
+      upsertCollection(PlayerModel, teamPlayers.map(mapPlayer)),
+    ])
+  }
 }
