@@ -29,7 +29,7 @@ connectToMongoDB()
 
 const app: Express = express()
 const port = (process.env.PORT || 3001) as number
-const useLiveUpdates = (process.env.LIVE || true) as boolean
+const useLiveUpdates = process.env.LIVE === "true"
 
 app.get("/", (req: Request, res: Response) => {
   res.send("RB Scoreboard Backend")
