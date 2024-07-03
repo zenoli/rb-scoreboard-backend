@@ -1,4 +1,4 @@
-import { groupBy, mapValues, omit, sum } from "lodash"
+import { flatMap, groupBy, intersection, mapValues, omit, sum } from "lodash"
 import removeAccents from "remove-accents"
 import CleanSheetModel from "../models/clean-sheet"
 import { getPopulatedDrafts } from "./drafts"
@@ -7,50 +7,67 @@ import * as TypeIds from "../utils/type-ids"
 import * as Rb from "../types/rb"
 import { mapPlayer, mapTeam } from "./utils"
 
-async function getCleanSheets(): Promise<Model.CleanSheet[]> {
+async function getUefaCleanSheets(): Promise<Model.CleanSheet[]> {
   return await CleanSheetModel.find({}).exec()
+}
+
+function getMatchingCleanSheetsEvents(
+  goalKeepers: Model.PopulatedPlayer[],
+  uefaCleanSheets: Model.CleanSheet[]
+): Rb.CleanSheetEvent[] {
+  const draftedGoalKeeperNames = flatMap(goalKeepers, (goalKeeper) => [
+    // Hopefully one of these three values matches with the Uefa names
+    removeAccents(goalKeeper.displayName),
+    removeAccents(goalKeeper.name),
+    removeAccents(goalKeeper.commonName),
+  ])
+
+  // Dictionary: name -> cleanSheetEvent
+  const matchingUefaCleanSheetsDict = mapValues(
+    groupBy(
+      uefaCleanSheets.filter((cleanSheetEvent) =>
+        draftedGoalKeeperNames.includes(removeAccents(cleanSheetEvent.name))
+      ),
+      (cleanSheetEvent) => removeAccents(cleanSheetEvent.name)
+    ),
+    (events) => events[0]
+  )
+  let outputs: Rb.CleanSheetEvent[] = []
+
+  for (const goalKeeper of goalKeepers) {
+    const cleanSheetEvent =
+      matchingUefaCleanSheetsDict[removeAccents(goalKeeper.displayName)] ||
+      matchingUefaCleanSheetsDict[removeAccents(goalKeeper.name)] ||
+      matchingUefaCleanSheetsDict[removeAccents(goalKeeper.commonName)]
+
+    if (cleanSheetEvent) {
+      outputs.push({
+        name: "cleanSheet",
+        player: mapPlayer(goalKeeper),
+        team: mapTeam(goalKeeper.team),
+        cleanSheets: cleanSheetEvent.cleanSheets,
+      })
+    }
+  }
+  return outputs
 }
 
 export async function getUsersToCleanSheetsMap(): Promise<
   Record<string, Rb.CleanSheetEvent[]>
 > {
-  const [cleanSheets, drafts] = await Promise.all([
-    getCleanSheets(),
+  const [uefaCleanSheets, drafts] = await Promise.all([
+    getUefaCleanSheets(),
     getPopulatedDrafts(),
   ])
   const result = drafts.map((draft) => {
     const goalKeepers = draft.players.filter(
       (player) => player.position._id === TypeIds.GOALKEEPER
     )
-
-    const userCleanSheets = mapValues(
-      groupBy(
-        cleanSheets.filter((cleanSheetEvent) =>
-          goalKeepers
-            .map((goalKeeper) => removeAccents(goalKeeper.displayName))
-            .includes(removeAccents(cleanSheetEvent.name))
-        ),
-        (cleanSheetEvent) => removeAccents(cleanSheetEvent.name)
-      ),
-      (events) => events[0]
+    const cleanSheetEvents = getMatchingCleanSheetsEvents(
+      goalKeepers,
+      uefaCleanSheets
     )
-
-    let outputs: Rb.CleanSheetEvent[] = []
-
-    for (const goalKeeper of goalKeepers) {
-      const cleanSheetEvent =
-        userCleanSheets[removeAccents(goalKeeper.displayName)]
-
-      if (cleanSheetEvent) {
-        outputs.push({
-          name: "cleanSheet",
-          player: mapPlayer(goalKeeper),
-          team: mapTeam(goalKeeper.team),
-          cleanSheets: cleanSheetEvent.cleanSheets,
-        })
-      }
-    }
-    return [draft.user, outputs]
+    return [draft.user, cleanSheetEvents]
   })
 
   return Object.fromEntries(result)
