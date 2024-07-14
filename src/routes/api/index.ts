@@ -1,17 +1,13 @@
 import { Router, Request, Response } from "express"
 import { getScores } from "../../services/scores"
-import { getPopulatedDrafts } from "../../services/drafts"
 import { EventsRouter } from "./events"
 import { UsersRouter } from "./users"
 import { CleanSheetsRouter } from "./clean-sheet-events"
+import { ScoresRouter } from "./scores"
 
 const ApiRouter: Router = Router()
 
-ApiRouter.get("/scores", async (req: Request, res: Response) => {
-  const events = await getScores()
-  res.json(events)
-})
-
+ApiRouter.use("/scores", ScoresRouter)
 ApiRouter.use("/events", EventsRouter)
 ApiRouter.use("/clean-sheets", CleanSheetsRouter)
 ApiRouter.use("/users", UsersRouter)
