@@ -6,6 +6,14 @@ import { getDrafts } from "./drafts"
 import { mapPlayer, mapTeam } from "./utils"
 import { groupBy, omit } from "lodash"
 
+const relevantEventIds = [
+  TypeIds.GOAL,
+  TypeIds.PENALTY,
+  TypeIds.YELLOW_CARD,
+  TypeIds.RED_CARD,
+  TypeIds.YELLOW_RED_CARD,
+]
+
 async function getPopulatedEvents({
   playerIds,
   eventTypeIds,
@@ -91,6 +99,10 @@ function computeUserToEventsMap(drafts: Model.Draft[], rbEvents: Rb.Event[]) {
   )
 }
 
+function computePlayerToEventsMap(rbEvents: Rb.Event[]) {
+  return groupBy(rbEvents, (rbEvent) => rbEvent.player.id)
+}
+
 function computeScoreEvents(events: Model.PopulatedEvent[]) {
   const relevantEvents = events.filter(
     (event) => event.player !== null // Yellow cards by coaches don't resolve to a player
@@ -107,14 +119,15 @@ function computeScoreEvents(events: Model.PopulatedEvent[]) {
   return rbEvents
 }
 
+export async function getPlayerToEventsMap() {
+  const events = await getPopulatedEvents({ eventTypeIds: relevantEventIds })
+
+  const rbEvents = computeScoreEvents(events)
+  const userToEventsMap = computePlayerToEventsMap(rbEvents)
+  return userToEventsMap
+}
+
 export async function getUserToEventsMap() {
-  const relevantEventIds = [
-    TypeIds.GOAL,
-    TypeIds.PENALTY,
-    TypeIds.YELLOW_CARD,
-    TypeIds.RED_CARD,
-    TypeIds.YELLOW_RED_CARD,
-  ]
   const [events, drafts] = await Promise.all([
     getPopulatedEvents({ eventTypeIds: relevantEventIds }),
     getDrafts(),

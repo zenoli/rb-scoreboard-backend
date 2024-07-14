@@ -37,3 +37,6 @@ export type ScoreType = "goal" | "assist" | "booking" | "cleanSheet" | "total"
 export type Score = {
   [key in ScoreType]: number
 }
+
+export type UserScore = Score & { user: User }
+export type PlayerScore = Score & { player: Player }

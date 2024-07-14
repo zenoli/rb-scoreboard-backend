@@ -6,6 +6,7 @@ import * as Model from "../models/types"
 import * as TypeIds from "../utils/type-ids"
 import * as Rb from "../types/rb"
 import { mapPlayer, mapTeam } from "./utils"
+import { getPopulatedPlayers } from "./players"
 
 async function getUefaCleanSheets(): Promise<Model.CleanSheet[]> {
   return await CleanSheetModel.find({}).exec()
@@ -50,6 +51,29 @@ function getMatchingCleanSheetsEvents(
     }
   }
   return outputs
+}
+
+export async function getPlayerToCleanSheetsMap(): Promise<
+  Record<string, Rb.CleanSheetEvent[]>
+> {
+  const [uefaCleanSheets, players] = await Promise.all([
+    getUefaCleanSheets(),
+    getPopulatedPlayers(),
+  ])
+
+  const goalKeepers = players.filter(
+    (player) => player.position._id === TypeIds.GOALKEEPER
+  )
+
+  const result = goalKeepers.map((goalKeeper) => {
+    const cleanSheetEvents = getMatchingCleanSheetsEvents(
+      [goalKeeper],
+      uefaCleanSheets
+    )
+    return [goalKeeper._id, cleanSheetEvents]
+  })
+
+  return Object.fromEntries(result)
 }
 
 export async function getUsersToCleanSheetsMap(): Promise<
